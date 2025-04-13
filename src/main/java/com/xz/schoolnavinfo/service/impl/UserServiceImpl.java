@@ -2,11 +2,11 @@ package com.xz.schoolnavinfo.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.xz.schoolnavinfo.authentication.UserLoginInfo;
+import com.xz.schoolnavinfo.authentication.UserInfo;
 import com.xz.schoolnavinfo.authentication.service.AuthJwtService;
 import com.xz.schoolnavinfo.common.data.Result;
 import com.xz.schoolnavinfo.mapper.UserMapper;
-import com.xz.schoolnavinfo.model.entity.User;
+import com.xz.schoolnavinfo.data.entity.User;
 import com.xz.schoolnavinfo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -38,7 +38,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     }
 
     @Override
-    public UserLoginInfo getUserInfo() {
+    public UserInfo getUserInfo() {
         return jwtService.getUserLoginInfo();
     }
 

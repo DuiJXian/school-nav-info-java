@@ -1,12 +1,12 @@
 package com.xz.schoolnavinfo.authentication.jwt;
 
-import com.xz.schoolnavinfo.authentication.UserLoginInfo;
+import com.xz.schoolnavinfo.authentication.UserInfo;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 
 public class MyJwtAuthentication extends AbstractAuthenticationToken {
 
     private String jwtToken; // 前端传过来
-    private UserLoginInfo currentUser; // 认证成功后，后台从数据库获取信息
+    private UserInfo currentUser; // 认证成功后，后台从数据库获取信息
 
     public MyJwtAuthentication() {
         // 权限，用不上，直接null
@@ -33,11 +33,11 @@ public class MyJwtAuthentication extends AbstractAuthenticationToken {
         this.jwtToken = jwtToken;
     }
 
-    public UserLoginInfo getCurrentUser() {
+    public UserInfo getCurrentUser() {
         return currentUser;
     }
 
-    public void setCurrentUser(UserLoginInfo currentUser) {
+    public void setCurrentUser(UserInfo currentUser) {
         this.currentUser = currentUser;
     }
 }

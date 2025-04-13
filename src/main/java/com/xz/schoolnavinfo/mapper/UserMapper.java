@@ -1,7 +1,7 @@
 package com.xz.schoolnavinfo.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.xz.schoolnavinfo.model.entity.User;
+import com.xz.schoolnavinfo.data.entity.User;
 import org.apache.ibatis.annotations.Mapper;
 
 @Mapper

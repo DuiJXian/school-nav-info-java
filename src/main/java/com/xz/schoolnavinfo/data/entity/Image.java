@@ -1,4 +1,4 @@
-package com.xz.schoolnavinfo.model.entity;
+package com.xz.schoolnavinfo.data.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;

@@ -10,9 +10,11 @@ import com.xz.schoolnavinfo.authentication.login.UsernameAuthenticationProvider;
 import com.xz.schoolnavinfo.authentication.login.LoginFailHandler;
 import com.xz.schoolnavinfo.authentication.login.LoginSuccessHandler;
 import jakarta.servlet.Filter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -36,9 +38,12 @@ public class CustomWebSecurityConfig {
 
     private final ApplicationContext applicationContext;
 
-    public CustomWebSecurityConfig(ApplicationContext applicationContext) {
+    public CustomWebSecurityConfig(ApplicationContext applicationContext, RedisTemplate<String, String> redisTemplate) {
         this.applicationContext = applicationContext;
+        this.redisTemplate = redisTemplate;
     }
+
+    private final RedisTemplate<String, String> redisTemplate;
 
     private final AuthenticationEntryPoint authenticationExceptionHandler = new CustomAuthenticationExceptionHandler();
     private final AccessDeniedHandler authorizationExceptionHandler = new CustomAuthorizationExceptionHandler();
@@ -97,6 +102,7 @@ public class CustomWebSecurityConfig {
             .authorizeHttpRequests(authorize ->
                 authorize.requestMatchers("/user/register").permitAll()
                     .requestMatchers("/user/changePassword").permitAll()
+                    .requestMatchers("/user/getUserInfo").permitAll()
                     .anyRequest().authenticated());
 
         LoginSuccessHandler loginSuccessHandler = applicationContext.getBean(LoginSuccessHandler.class);
@@ -117,6 +123,7 @@ public class CustomWebSecurityConfig {
     @Bean
     public SecurityFilterChain myApiFilterChain(HttpSecurity http) throws Exception {
         // 使用securityMatcher限定当前配置作用的路径
+
         http.securityMatcher("/api/**")
             .authorizeHttpRequests(authorize ->
                 authorize.requestMatchers("/api/public/*").permitAll()
@@ -133,7 +140,7 @@ public class CustomWebSecurityConfig {
         commonHttpSetting(http);
 
         MyJwtAuthenticationFilter openApi1Filter = new MyJwtAuthenticationFilter(
-            applicationContext.getBean(AuthJwtService.class));
+            applicationContext.getBean(AuthJwtService.class), redisTemplate);
         // 加一个登录方式。用户名、密码登录
         http.addFilterBefore(openApi1Filter, UsernamePasswordAuthenticationFilter.class);
         return http.build();

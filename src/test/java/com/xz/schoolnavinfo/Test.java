@@ -1,7 +1,7 @@
 package com.xz.schoolnavinfo;
 
 import com.xz.schoolnavinfo.mapper.UserMapper;
-import com.xz.schoolnavinfo.model.entity.User;
+import com.xz.schoolnavinfo.data.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 

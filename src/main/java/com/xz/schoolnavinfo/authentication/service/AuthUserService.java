@@ -1,7 +1,7 @@
 package com.xz.schoolnavinfo.authentication.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.xz.schoolnavinfo.model.entity.User;
+import com.xz.schoolnavinfo.data.entity.User;
 import com.xz.schoolnavinfo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;

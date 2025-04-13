@@ -1,7 +1,9 @@
 package com.xz.schoolnavinfo.controller;
 
 import com.xz.schoolnavinfo.common.data.Result;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.Banner;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.http.ResponseEntity;
@@ -34,7 +36,7 @@ public class FileController {
 
     // 1️⃣ 限制只能上传图片
     @PostMapping("/upload")
-    public Result uploadFile(@RequestParam("file") MultipartFile file) {
+    public Result uploadFile(@RequestParam("file") MultipartFile file, @RequestParam String type) {
         if (file.isEmpty()) {
             return Result.fail("文件为空");
         }
@@ -59,6 +61,9 @@ public class FileController {
 
             // 生成唯一文件名
             String fileName = UUID.randomUUID() + "." + fileExtension;
+            if (StringUtils.isNoneBlank(type) && type.equals("banner")) {
+                fileName = "banner-" + fileName;
+            }
             File destinationFile = new File(uploadDir + fileName);
 
             // 确保目录存在

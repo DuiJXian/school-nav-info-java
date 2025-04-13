@@ -1,4 +1,4 @@
-package com.xz.schoolnavinfo.model.entity;
+package com.xz.schoolnavinfo.data.entity;
 
 import com.baomidou.mybatisplus.annotation.*;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -33,5 +33,5 @@ public class User {
 
     private String role; // 角色
 
-    private String picture;
+    private String avatarUrl;
 }

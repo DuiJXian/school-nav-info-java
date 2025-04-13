@@ -1,6 +1,6 @@
 package com.xz.schoolnavinfo.authentication.login;
 
-import com.xz.schoolnavinfo.authentication.UserLoginInfo;
+import com.xz.schoolnavinfo.authentication.UserInfo;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.Authentication;
 
@@ -14,7 +14,7 @@ public class UsernameAuthentication extends AbstractAuthenticationToken {
 
     private String username; // 前端传过来
     private String password; // 前端传过来
-    private UserLoginInfo currentUser; // 认证成功后，后台从数据库获取信息
+    private UserInfo currentUser; // 认证成功后，后台从数据库获取信息
 
     public UsernameAuthentication() {
         // 权限，用不上，直接null
@@ -49,11 +49,11 @@ public class UsernameAuthentication extends AbstractAuthenticationToken {
         this.password = password;
     }
 
-    public UserLoginInfo getCurrentUser() {
+    public UserInfo getCurrentUser() {
         return currentUser;
     }
 
-    public void setCurrentUser(UserLoginInfo currentUser) {
+    public void setCurrentUser(UserInfo currentUser) {
         this.currentUser = currentUser;
     }
 }

@@ -1,6 +1,6 @@
 package com.xz.schoolnavinfo.authentication.login;
 
-import com.xz.schoolnavinfo.authentication.UserLoginInfo;
+import com.xz.schoolnavinfo.authentication.UserInfo;
 import com.xz.schoolnavinfo.authentication.service.AuthJwtService;
 import com.xz.schoolnavinfo.common.data.Result;
 import com.xz.schoolnavinfo.common.exception.ExceptionTool;
@@ -10,6 +10,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -20,9 +22,8 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.time.Duration;
 import java.util.Collection;
-import java.util.LinkedHashMap;
-import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
@@ -39,6 +40,9 @@ public class LoginSuccessHandler extends
     @Autowired
     private AuthJwtService jwtService;
 
+    @Autowired
+    private RedisTemplate<String, String> redisTemplate;
+
     public LoginSuccessHandler() {
         this.setRedirectStrategy(new RedirectStrategy() {
             @Override
@@ -54,14 +58,11 @@ public class LoginSuccessHandler extends
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
                                         Authentication authentication) throws IOException {
         Object principal = authentication.getPrincipal();
-        if (principal == null || !(principal instanceof UserLoginInfo)) {
+        if (!(principal instanceof UserInfo)) {
             ExceptionTool.throwException(
                 "登陆认证成功后，authentication.getPrincipal()返回的Object对象必须是：UserLoginInfo！");
         }
-        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
-
-        UserLoginInfo currentUser = (UserLoginInfo) principal;
-        currentUser.setSessionId(UUID.randomUUID().toString());
+        UserInfo currentUser = (UserInfo) principal;
 
         // 生成token和refreshToken
 //    Map<String, Object> responseData = new LinkedHashMap<>();
@@ -78,18 +79,23 @@ public class LoginSuccessHandler extends
         // 虽然APPLICATION_JSON_UTF8_VALUE过时了，但也要用。因为Postman工具不声明utf-8编码就会出现乱码
         response.setContentType(MediaType.APPLICATION_JSON_UTF8_VALUE);
         PrintWriter writer = response.getWriter();
-        writer.print(JSON.stringify(Result.data(generateToken(currentUser), "登录成功！")));
+
+        String token = generateToken(currentUser);
+        ValueOperations<String, String> ops = redisTemplate.opsForValue();
+        ops.set("TOKEN-" + currentUser.getId(), token, Duration.ofMinutes(10));
+
+        writer.print(JSON.stringify(Result.data(JSON.stringify(token), "登录成功！")));
         writer.flush();
         writer.close();
     }
 
-    public String generateToken(UserLoginInfo currentUser) {
-        long expiredTime = TimeTool.nowMilli() + TimeUnit.MINUTES.toMillis(60); // 10分钟后过期
+    public String generateToken(UserInfo currentUser) {
+        long expiredTime = TimeTool.nowMilli() + TimeUnit.MINUTES.toMillis(10);
         currentUser.setExpiredTime(expiredTime);
         return jwtService.createJwt(currentUser, expiredTime);
     }
 
-    private String generateRefreshToken(UserLoginInfo loginInfo) {
+    private String generateRefreshToken(UserInfo loginInfo) {
         return jwtService.createJwt(loginInfo, TimeTool.nowMilli() + TimeUnit.DAYS.toMillis(30));
     }
 

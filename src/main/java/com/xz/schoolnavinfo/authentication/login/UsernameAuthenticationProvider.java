@@ -1,8 +1,8 @@
 package com.xz.schoolnavinfo.authentication.login;
 
-import com.xz.schoolnavinfo.authentication.UserLoginInfo;
+import com.xz.schoolnavinfo.authentication.UserInfo;
 import com.xz.schoolnavinfo.authentication.service.AuthUserService;
-import com.xz.schoolnavinfo.model.entity.User;
+import com.xz.schoolnavinfo.data.entity.User;
 import com.xz.schoolnavinfo.common.utils.JSON;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -46,10 +46,10 @@ public class UsernameAuthenticationProvider implements AuthenticationProvider {
       throw new BadCredentialsException("用户名或密码不正确");
     }
 
-    UsernameAuthentication token = new UsernameAuthentication();
-    token.setCurrentUser(JSON.convert(user, UserLoginInfo.class));
-    token.setAuthenticated(true); // 认证通过，这里一定要设成true
-    return token;
+    UsernameAuthentication usernameAuthentication = new UsernameAuthentication();
+    usernameAuthentication.setCurrentUser(JSON.convert(user, UserInfo.class));
+    usernameAuthentication.setAuthenticated(true); // 认证通过，这里一定要设成true
+    return usernameAuthentication;
   }
 
   @Override

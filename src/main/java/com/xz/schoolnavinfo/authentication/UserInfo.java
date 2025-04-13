@@ -8,14 +8,12 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public class UserLoginInfo {
-
-    private String sessionId; // 会话id，全局唯一
-    private String username;
+public class UserInfo {
     private String id;
-    private String nickname; // 昵称
-    private String role;
-    private String picture;
+    private String username;
+    private String nickname;
+    private String avatarUrl;
+    private String Role;
 
     private Long expiredTime; // 过期时间
 

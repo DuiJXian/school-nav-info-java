@@ -1,4 +1,4 @@
-package com.xz.schoolnavinfo.model.type;
+package com.xz.schoolnavinfo.data.type;
 
 public enum ArticleType {
     ACTIVITY,

@@ -1,11 +1,13 @@
 package com.xz.schoolnavinfo.service;
 
-import com.xz.schoolnavinfo.model.entity.Image;
+import com.xz.schoolnavinfo.data.entity.Image;
 
 import java.util.List;
 
 public interface ImageService {
-    List<Image> getImages(String articleId);
+    List<Image> getImageByArticleId(String articleId);
+
+    List<Image> getBannerImage();
 
     void insertImage(Image image);
 }
