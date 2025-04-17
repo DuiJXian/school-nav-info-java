@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.xz.schoolnavinfo.authentication.UserInfo;
 import com.xz.schoolnavinfo.data.entity.User;
-import com.xz.schoolnavinfo.data.vo.CommentDTO;
+import com.xz.schoolnavinfo.data.dto.CommentDTO;
 import com.xz.schoolnavinfo.mapper.CommentMapper;
 import com.xz.schoolnavinfo.data.entity.Comment;
 import com.xz.schoolnavinfo.service.CommentService;

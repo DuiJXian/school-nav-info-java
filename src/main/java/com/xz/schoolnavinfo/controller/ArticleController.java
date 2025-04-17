@@ -6,7 +6,7 @@ import com.xz.schoolnavinfo.common.data.PageQueryConf;
 import com.xz.schoolnavinfo.common.data.Result;
 import com.xz.schoolnavinfo.data.entity.Article;
 import com.xz.schoolnavinfo.data.type.ArticleType;
-import com.xz.schoolnavinfo.data.vo.ArticleDTO;
+import com.xz.schoolnavinfo.data.dto.ArticleDTO;
 import com.xz.schoolnavinfo.service.ArticleService;
 import org.springframework.web.bind.annotation.*;
 

@@ -47,7 +47,6 @@ public class MyJwtAuthenticationFilter extends OncePerRequestFilter {
             jwtToken = jwtToken.substring(7);
         }
 
-
         try {
             UserInfo userInfo = jwtService.verifyJwt(jwtToken, UserInfo.class);
 

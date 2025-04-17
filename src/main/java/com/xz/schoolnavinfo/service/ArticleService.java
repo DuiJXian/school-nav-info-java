@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.xz.schoolnavinfo.common.data.PageResult;
 import com.xz.schoolnavinfo.common.data.Result;
 import com.xz.schoolnavinfo.data.entity.Article;
-import com.xz.schoolnavinfo.data.vo.ArticleDTO;
+import com.xz.schoolnavinfo.data.dto.ArticleDTO;
 
 import java.util.List;
 

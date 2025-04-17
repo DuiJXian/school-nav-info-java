@@ -1,4 +1,4 @@
-package com.xz.schoolnavinfo.data.vo;
+package com.xz.schoolnavinfo.data.dto;
 
 import com.xz.schoolnavinfo.authentication.UserInfo;
 import com.xz.schoolnavinfo.data.entity.Comment;

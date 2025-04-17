@@ -13,7 +13,7 @@ import com.xz.schoolnavinfo.mapper.ArticleMapper;
 import com.xz.schoolnavinfo.data.entity.Article;
 import com.xz.schoolnavinfo.data.entity.Image;
 import com.xz.schoolnavinfo.data.entity.User;
-import com.xz.schoolnavinfo.data.vo.ArticleDTO;
+import com.xz.schoolnavinfo.data.dto.ArticleDTO;
 import com.xz.schoolnavinfo.service.ArticleService;
 import com.xz.schoolnavinfo.service.ImageService;
 import com.xz.schoolnavinfo.service.UserService;
