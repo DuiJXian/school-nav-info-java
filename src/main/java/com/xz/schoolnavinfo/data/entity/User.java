@@ -9,7 +9,16 @@ import java.time.LocalDateTime;
 
 @Data
 @TableName("user")
+@NoArgsConstructor
 public class User {
+
+    public User(String id, String username, String nickname, String avatarUrl) {
+        this.id = id;
+        this.username = username;
+        this.nickname = nickname;
+        this.avatarUrl = avatarUrl;
+    }
+
     @TableId(type = IdType.ASSIGN_ID)
     private String id; // 主键
 

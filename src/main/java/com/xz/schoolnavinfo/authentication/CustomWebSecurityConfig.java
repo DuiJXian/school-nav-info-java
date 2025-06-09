@@ -102,7 +102,6 @@ public class CustomWebSecurityConfig {
             .authorizeHttpRequests(authorize ->
                 authorize.requestMatchers("/user/register").permitAll()
                     .requestMatchers("/user/changePassword").permitAll()
-                    .requestMatchers("/user/getUserInfo").permitAll()
                     .anyRequest().authenticated());
 
         LoginSuccessHandler loginSuccessHandler = applicationContext.getBean(LoginSuccessHandler.class);
@@ -126,8 +125,9 @@ public class CustomWebSecurityConfig {
 
         http.securityMatcher("/api/**")
             .authorizeHttpRequests(authorize ->
-                authorize.requestMatchers("/api/public/*").permitAll()
-                    .requestMatchers("/api/admin/*").hasRole("ADMIN")
+                authorize
+                    .requestMatchers("/api/article/activity/insert").hasRole("ADMIN")
+                    .requestMatchers("/api/article/activity/del").hasRole("ADMIN")
                     .anyRequest().authenticated()
             );
 //        http.securityMatcher("/api/*")

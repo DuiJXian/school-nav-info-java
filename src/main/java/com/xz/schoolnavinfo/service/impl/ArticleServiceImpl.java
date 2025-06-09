@@ -5,8 +5,8 @@ import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.xz.schoolnavinfo.authentication.UserInfo;
-import com.xz.schoolnavinfo.common.data.PageResult;
-import com.xz.schoolnavinfo.common.data.Result;
+import com.xz.schoolnavinfo.data.resp.PageResult;
+import com.xz.schoolnavinfo.data.resp.Result;
 import com.xz.schoolnavinfo.data.type.ArticleType;
 import com.xz.schoolnavinfo.data.type.RoleType;
 import com.xz.schoolnavinfo.mapper.ArticleMapper;
@@ -17,6 +17,7 @@ import com.xz.schoolnavinfo.data.dto.ArticleDTO;
 import com.xz.schoolnavinfo.service.ArticleService;
 import com.xz.schoolnavinfo.service.ImageService;
 import com.xz.schoolnavinfo.service.UserService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -48,8 +49,9 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
 
         List<ArticleDTO> list = new ArrayList<>();
         for (Article article : articles) {
+            User user = userService.getUserById(article.getUserId());
             List<Image> images = imageService.getImageByArticleId(article.getId());
-            ArticleDTO articleDTO = new ArticleDTO(article, null, images.stream().map(Image::getUrl).collect(Collectors.toList()));
+            ArticleDTO articleDTO = new ArticleDTO(article, user, images.stream().map(Image::getUrl).collect(Collectors.toList()));
             list.add(articleDTO);
         }
         return list;
@@ -69,11 +71,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         List<ArticleDTO> list = new ArrayList<>();
         for (Article article : articlePage.getRecords()) {
             User user = userService.getUserById(article.getUserId());
-            User newUser = new User();
-            newUser.setUsername(user.getUsername());
-            newUser.setAvatarUrl(user.getAvatarUrl());
-            newUser.setNickname(user.getNickname());
-            newUser.setId(user.getId());
+            User newUser = new User(user.getId(), user.getUsername(), user.getNickname(), user.getAvatarUrl());
             List<Image> images = imageService.getImageByArticleId(article.getId());
             ArticleDTO articleDTO = new ArticleDTO(article, newUser, images.stream().map(Image::getUrl).collect(Collectors.toList()));
             list.add(articleDTO);
@@ -87,12 +85,32 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     }
 
     @Override
+    public List<ArticleDTO> getArticleByText(String text) {
+        LambdaQueryWrapper<Article> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper
+            .eq(Article::getType, ArticleType.DISCUSS)
+            .and(e -> e
+                .like(Article::getTitle, text)
+                .or()
+                .like(Article::getContent, text))
+            .orderByDesc(Article::getCreateTime);
+
+        List<Article> articleList = this.list(queryWrapper);
+        List<ArticleDTO> articleDTOList = new ArrayList<>();
+        for (Article article : articleList) {
+            User user = userService.getUserById(article.getUserId());
+            User newUser = new User(user.getId(), user.getUsername(), user.getNickname(), user.getAvatarUrl());
+            List<Image> images = imageService.getImageByArticleId(article.getId());
+            ArticleDTO articleDTO = new ArticleDTO(article, newUser, images.stream().map(Image::getUrl).collect(Collectors.toList()));
+            articleDTOList.add(articleDTO);
+        }
+        return articleDTOList;
+    }
+
+    @Override
     @Transactional
     public Result insertArticle(ArticleDTO articleDTO) {
         UserInfo userInfo = userService.getUserInfo();
-        if (userInfo.getRole().equals(RoleType.NORMAL.name())) {
-            return Result.fail("没有权限");
-        }
 
         Article article = articleDTO.getArticle();
         String articleId = IdWorker.getIdStr();
@@ -113,5 +131,25 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
             }
         }
         return Result.success("创建成功");
+    }
+
+    @Override
+    public Result deleteArticle(String id, ArticleType type) {
+        UserInfo userInfo = userService.getUserInfo();
+        if (ArticleType.ACTIVITY.name().equals(type.name()) && userInfo.getRole().equals(RoleType.NORMAL.name())) {
+            return Result.fail("没有权限");
+        }
+
+        Article article = getById(id);
+        if (article == null) {
+            return Result.fail("id错误");
+        }
+        if (!StringUtils.equals(article.getUserId(), userInfo.getId()) && StringUtils.equals(type.name(), ArticleType.DISCUSS.name())) {
+            return Result.fail("错误删除");
+        }
+        if (removeById(id)) {
+            return Result.success("删除成功");
+        }
+        return Result.fail("删除失败");
     }
 }

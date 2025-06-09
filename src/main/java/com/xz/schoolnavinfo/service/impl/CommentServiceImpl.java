@@ -36,7 +36,7 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
             userInfo.setNickname(user.getNickname());
             userInfo.setId(user.getId());
             userInfo.setUsername(user.getUsername());
-            userInfo.setAvatarUrl(userInfo.getAvatarUrl());
+            userInfo.setAvatarUrl(user.getAvatarUrl());
 
             commentDTO.setUserInfo(userInfo);
 

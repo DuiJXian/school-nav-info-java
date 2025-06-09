@@ -2,8 +2,8 @@ package com.xz.schoolnavinfo.controller;
 
 import com.xz.schoolnavinfo.authentication.UserInfo;
 import com.xz.schoolnavinfo.authentication.service.AuthJwtService;
-import com.xz.schoolnavinfo.common.data.PageQueryConf;
-import com.xz.schoolnavinfo.common.data.Result;
+import com.xz.schoolnavinfo.data.resp.PageQueryConf;
+import com.xz.schoolnavinfo.data.resp.Result;
 import com.xz.schoolnavinfo.data.entity.Article;
 import com.xz.schoolnavinfo.data.type.ArticleType;
 import com.xz.schoolnavinfo.data.dto.ArticleDTO;
@@ -34,6 +34,23 @@ public class ArticleController {
     public Result insertArticlesDiscuss(@RequestBody ArticleDTO articleDTO) {
         if (insertArticle(articleDTO, ArticleType.DISCUSS)) return Result.fail("参数错误");
         return articleService.insertArticle(articleDTO);
+    }
+
+    @PostMapping("/discuss/search")
+    public Result searchArticlesDiscuss(@RequestBody String text) {
+        return Result.data(
+            articleService.getArticleByText(text.replaceAll("^\"|\"$", "")),
+            "成功");
+    }
+
+    @PostMapping("/discuss/del")
+    public Result delArticlesDiscuss(@RequestBody String id) {
+        return articleService.deleteArticle(id.replaceAll("^\"|\"$", ""), ArticleType.DISCUSS);
+    }
+
+    @PostMapping("/activity/del")
+    public Result delArticlesActivity(@RequestBody String id) {
+        return articleService.deleteArticle(id.replaceAll("^\"|\"$", ""), ArticleType.ACTIVITY);
     }
 
 

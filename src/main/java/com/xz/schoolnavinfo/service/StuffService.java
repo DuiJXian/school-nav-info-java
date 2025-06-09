@@ -16,4 +16,6 @@ public interface StuffService extends IService<Stuff> {
     StuffDTO getStuffById(String id);
 
     List<StuffDTO> getStuffList();
+
+    List<StuffDTO> getStuffListByText(String text);
 }

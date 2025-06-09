@@ -1,4 +1,4 @@
-package com.xz.schoolnavinfo.common.data;
+package com.xz.schoolnavinfo.data.resp;
 
 import lombok.Data;
 

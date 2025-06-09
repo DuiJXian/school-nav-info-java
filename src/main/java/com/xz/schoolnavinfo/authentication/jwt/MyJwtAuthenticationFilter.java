@@ -15,19 +15,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.time.Duration;
+import java.util.List;
 
 public class MyJwtAuthenticationFilter extends OncePerRequestFilter {
 
     private static final Logger logger = LoggerFactory.getLogger(MyJwtAuthenticationFilter.class);
 
-    private AuthJwtService jwtService;
+    private final AuthJwtService jwtService;
 
-    private RedisTemplate<String, String> redisTemplate;
+    private final RedisTemplate<String, String> redisTemplate;
 
     public MyJwtAuthenticationFilter(AuthJwtService jwtService, RedisTemplate<String, String> redisTemplate) {
         this.jwtService = jwtService;
@@ -51,13 +53,15 @@ public class MyJwtAuthenticationFilter extends OncePerRequestFilter {
             UserInfo userInfo = jwtService.verifyJwt(jwtToken, UserInfo.class);
 
             ValueOperations<String, String> ops = redisTemplate.opsForValue();
-            String token = ops.getAndExpire("TOKEN-" + userInfo.getId(), Duration.ofMinutes(10));
+            String token = ops.getAndExpire("TOKEN-" + userInfo.getId(), Duration.ofDays(7));
 
             if (StringUtils.isBlank(token)) {
                 ExceptionTool.throwException("jwt过期", HttpStatus.UNAUTHORIZED, "token.expired");
             }
 
-            MyJwtAuthentication authentication = new MyJwtAuthentication();
+            List<SimpleGrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("ROLE_" + userInfo.getRole()));
+            MyJwtAuthentication authentication = new MyJwtAuthentication(authorities);
+
             authentication.setJwtToken(jwtToken);
             authentication.setAuthenticated(true); // 设置true，认证通过。
             authentication.setCurrentUser(userInfo);

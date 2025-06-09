@@ -1,4 +1,4 @@
-package com.xz.schoolnavinfo.common.handler;
+package com.xz.schoolnavinfo.config;
 
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
 import org.apache.ibatis.reflection.MetaObject;

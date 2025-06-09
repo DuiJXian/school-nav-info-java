@@ -2,7 +2,7 @@ package com.xz.schoolnavinfo.authentication.login;
 
 import com.xz.schoolnavinfo.authentication.UserInfo;
 import com.xz.schoolnavinfo.authentication.service.AuthJwtService;
-import com.xz.schoolnavinfo.common.data.Result;
+import com.xz.schoolnavinfo.data.resp.Result;
 import com.xz.schoolnavinfo.common.exception.ExceptionTool;
 import com.xz.schoolnavinfo.common.utils.JSON;
 import com.xz.schoolnavinfo.common.utils.TimeTool;
@@ -14,7 +14,6 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.RedirectStrategy;
 import org.springframework.security.web.authentication.AbstractAuthenticationTargetUrlRequestHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
@@ -23,8 +22,6 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.time.Duration;
-import java.util.Collection;
-import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -90,7 +87,7 @@ public class LoginSuccessHandler extends
     }
 
     public String generateToken(UserInfo currentUser) {
-        long expiredTime = TimeTool.nowMilli() + TimeUnit.MINUTES.toMillis(10);
+        long expiredTime = TimeTool.nowMilli() + TimeUnit.DAYS.toMillis(3);
         currentUser.setExpiredTime(expiredTime);
         return jwtService.createJwt(currentUser, expiredTime);
     }

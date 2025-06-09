@@ -19,15 +19,17 @@ spring:
   web:
     resources:
       static-locations:
-        - classpath:/static/          # 默认的静态资源目录
+        - classpath:/static/
         - file:F:/IDE-Project/java/schoolnavinfo/src/main/resources/static/
+  #        - file:/usr/upload/school_nav_info/static/
+  #          F:/IDE-Project/java/schoolnavinfo/src/main/resources/static/
   data:
     redis:
       host: localhost
       port: 6379
 
 file:
-  upload-dir: F:/IDE-Project/java/schoolnavinfo/src/main/resources/static/uploads/
+  upload-dir: /usr/upload/school_nav_info/static/images/
 
 
 mybatis-plus:

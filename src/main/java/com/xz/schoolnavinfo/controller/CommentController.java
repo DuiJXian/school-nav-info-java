@@ -1,7 +1,7 @@
 package com.xz.schoolnavinfo.controller;
 
 
-import com.xz.schoolnavinfo.common.data.Result;
+import com.xz.schoolnavinfo.data.resp.Result;
 import com.xz.schoolnavinfo.data.entity.Comment;
 import com.xz.schoolnavinfo.service.ArticleService;
 import com.xz.schoolnavinfo.service.CommentService;

@@ -1,11 +1,14 @@
 package com.xz.schoolnavinfo.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.xz.schoolnavinfo.authentication.UserInfo;
 import com.xz.schoolnavinfo.common.utils.JSON;
 import com.xz.schoolnavinfo.data.dto.StuffDTO;
+import com.xz.schoolnavinfo.data.entity.Article;
 import com.xz.schoolnavinfo.data.entity.Stuff;
 import com.xz.schoolnavinfo.data.entity.User;
+import com.xz.schoolnavinfo.data.type.ArticleType;
 import com.xz.schoolnavinfo.mapper.ArticleMapper;
 import com.xz.schoolnavinfo.mapper.StuffMapper;
 import com.xz.schoolnavinfo.service.StuffService;
@@ -46,10 +49,6 @@ public class StuffServiceImpl extends ServiceImpl<StuffMapper, Stuff> implements
         return removeById(id);
     }
 
-//    private Stuff getStuffById(String id) {
-//        return getById(id);
-//    }
-
     @Override
     public boolean updateStatus(String id) {
         UserInfo user = userService.getUserInfo();
@@ -72,6 +71,26 @@ public class StuffServiceImpl extends ServiceImpl<StuffMapper, Stuff> implements
     @Override
     public List<StuffDTO> getStuffList() {
         List<Stuff> stuffList = list();
+        List<StuffDTO> stuffDTOList = new ArrayList<>();
+        for (Stuff stuff : stuffList) {
+            User user = userService.getUserById(stuff.getPublisherId());
+            UserInfo userInfo = JSON.convert(user, UserInfo.class);
+            StuffDTO stuffDTO = new StuffDTO(stuff, userInfo);
+            stuffDTOList.add(stuffDTO);
+        }
+        return stuffDTOList;
+    }
+
+    @Override
+    public List<StuffDTO> getStuffListByText(String text) {
+        LambdaQueryWrapper<Stuff> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper
+            .and(e -> e
+                .like(Stuff::getDesc, text)
+                .or()
+                .like(Stuff::getAddress, text));
+
+        List<Stuff> stuffList = list(queryWrapper);
         List<StuffDTO> stuffDTOList = new ArrayList<>();
         for (Stuff stuff : stuffList) {
             User user = userService.getUserById(stuff.getPublisherId());

@@ -1,13 +1,11 @@
 package com.xz.schoolnavinfo.controller;
 
 
-import com.xz.schoolnavinfo.common.data.Result;
+import com.xz.schoolnavinfo.data.resp.Result;
 import com.xz.schoolnavinfo.data.entity.Stuff;
 import com.xz.schoolnavinfo.service.StuffService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/stuff")
@@ -51,6 +49,11 @@ public class StuffController {
     @GetMapping("/get")
     public Result getStuffList() {
         return Result.data(stuffService.getStuffList());
+    }
+
+    @PostMapping("/search")
+    public Result searchStuffList(@RequestBody String text) {
+        return Result.data(stuffService.getStuffListByText(text.replaceAll("^\"|\"$", "")));
     }
 
     @PostMapping("/getById")

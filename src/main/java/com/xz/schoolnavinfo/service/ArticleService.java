@@ -1,10 +1,11 @@
 package com.xz.schoolnavinfo.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.xz.schoolnavinfo.common.data.PageResult;
-import com.xz.schoolnavinfo.common.data.Result;
+import com.xz.schoolnavinfo.data.resp.PageResult;
+import com.xz.schoolnavinfo.data.resp.Result;
 import com.xz.schoolnavinfo.data.entity.Article;
 import com.xz.schoolnavinfo.data.dto.ArticleDTO;
+import com.xz.schoolnavinfo.data.type.ArticleType;
 
 import java.util.List;
 
@@ -17,6 +18,10 @@ public interface ArticleService extends IService<Article> {
 
     public Article getArticleByArticleId(String articleId);
 
+    public List<ArticleDTO> getArticleByText(String text);
+
     public Result insertArticle(ArticleDTO articleDTO);
+
+    public Result deleteArticle(String id, ArticleType type);
 
 }

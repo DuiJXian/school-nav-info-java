@@ -1,7 +1,7 @@
 package com.xz.schoolnavinfo.authentication.exception.handler;
 
-import com.xz.schoolnavinfo.common.data.Result;
-import com.xz.schoolnavinfo.common.data.ResultBuilder;
+import com.xz.schoolnavinfo.data.resp.Result;
+import com.xz.schoolnavinfo.data.resp.ResultBuilder;
 import com.xz.schoolnavinfo.common.exception.BaseException;
 import com.xz.schoolnavinfo.common.utils.JSON;
 import jakarta.servlet.FilterChain;
